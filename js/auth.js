@@ -14,7 +14,7 @@ import { showToast } from './ui.js';
 function debugLog(message, data) {
     const urlParams = new URLSearchParams(window.location.search);
     const isDebug = urlParams.get('debug') === 'true';
-    
+
     if (isDebug) {
         const prefix = '[DEBUG][Auth]';
         if (data !== undefined) {
@@ -36,11 +36,11 @@ function authorize() {
     } catch (e) {
         debugLog('인증 프로세스 시작');
     }
-    
+
     try {
         // API 키가 설정되어 있는지 확인
         const apiKey = getApiKey();
-        
+
         if (!apiKey) {
             debugLog('API 키가 설정되지 않음');
             // 안전하게 UI 함수 호출
@@ -51,7 +51,7 @@ function authorize() {
             }
             return;
         }
-        
+
         // 리디렉션 URI 및 스코프 설정
         const redirectUri = window.location.origin + window.location.pathname;
         const scopes = [
@@ -62,13 +62,13 @@ function authorize() {
             'playlist-modify-public',
             'playlist-modify-private'
         ];
-        
+
         // 인증 URL 생성 및 리디렉션
         const authUrl = `https://accounts.spotify.com/authorize?client_id=${apiKey}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(' '))}`;
-        
+
         debugLog('인증 URL로 리디렉션:', authUrl);
         window.location.href = authUrl;
-        
+
     } catch (error) {
         debugLog('인증 프로세스 오류:', error);
         console.error('인증 프로세스 오류:', error);
@@ -89,7 +89,7 @@ function getApiKey() {
     } catch (e) {
         debugLog('config에서 API 키를 가져오는 중 오류 발생');
     }
-    
+
     // window.__env__ 객체에서 확인
     try {
         if (window.__env__ && window.__env__.SPOTIFY_API_KEY) {
@@ -101,14 +101,14 @@ function getApiKey() {
     } catch (e) {
         debugLog('env에서 API 키를 가져오는 중 오류 발생');
     }
-    
+
     // 로컬 스토리지에서 확인
     try {
         return localStorage.getItem('spotify_api_key');
     } catch (e) {
         debugLog('로컬 스토리지에서 API 키를 가져오는 중 오류 발생');
     }
-    
+
     return null;
 }
 

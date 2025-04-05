@@ -7,12 +7,8 @@
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="css/style.css">
-        <!-- 환경 변수 설정 -->
-        <script>
-            // 전역 환경 변수 객체 생성
-            window.__env__ = window.__env__ || {};
-            window.__env__.SPOTIFY_API_KEY = '%SPOTIFY_API_KEY%';
-        </script>
+        <!-- 환경 설정 스크립트 (가장 먼저 로드) -->
+        <script src="js/environment-config.js"></script>
     </head>
     <body>
         <div class="container">
@@ -60,8 +56,11 @@
             </main>
         </div>
 
-        <!-- 기본 스크립트 - 모듈 문제 해결을 위해 일반 스크립트 먼저 로드 -->
+        <!-- 스크립트 로드 순서 -->
+        <!-- 1. 환경 설정 (head에서 로드됨) -->
+        <!-- 2. 인증 핸들러 -->
+        <script src="js/auth-handler.js"></script>
+        <!-- 3. 메인 애플리케이션 -->
         <script src="js/main.js"></script>
-        <!-- 모듈 스크립트는 동적으로 로드됨 (main.js 내에서) -->
     </body>
 </html>

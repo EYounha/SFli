@@ -39,7 +39,7 @@ function log(component, message, data) {
     // 콘솔 직접 사용 (config가 아직 로드되지 않았을 수 있음)
     const urlParams = new URLSearchParams(window.location.search);
     const isDebug = urlParams.get('debug') === 'true';
-    
+
     if (isDebug) {
         if (data !== undefined) {
             console.log(`[DEBUG][${component}] ${message}`, data);

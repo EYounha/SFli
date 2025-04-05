@@ -15,7 +15,7 @@ window.__env__.SPOTIFY_API_KEY = '%SPOTIFY_API_KEY%';
 window.__env__.DEBUG_MODE = new URLSearchParams(window.location.search).get('debug') === 'true';
 
 // 디버그 로그 함수
-window.__env__.log = function(message) {
+window.__env__.log = function (message) {
     if (window.__env__.DEBUG_MODE) {
         console.log(`[DEBUG] ${message}`);
     }

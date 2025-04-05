@@ -1,0 +1,103 @@
+/**
+ * components.css
+ * UI 컴포넌트 관련 스타일 정의
+ * 버튼, 카드, 검색창 등 재사용 가능한 UI 요소 포함
+ */
+
+/* 버튼 스타일 */
+.login-btn {
+    background-color: var(--spotify-green);
+    color: var(--spotify-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #1ed760;
+}
+
+/* 플레이리스트 카드 스타일 */
+.playlist-card {
+    background-color: var(--spotify-dark-gray);
+    border-radius: 8px;
+    padding: 20px;
+    transition: background-color 0.3s;
+}
+
+.playlist-card:hover {
+    background-color: var(--spotify-hover-gray);
+}
+
+.playlist-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.playlist-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.playlist-info {
+    color: var(--spotify-light-gray);
+    font-size: 14px;
+}
+
+/* 검색창 스타일 */
+.search-bar {
+    display: flex;
+    background-color: var(--spotify-dark-gray);
+    border-radius: 30px;
+    padding: 10px 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-bar input {
+    background: none;
+    border: none;
+    color: var(--spotify-white);
+    width: 100%;
+    outline: none;
+}
+
+.search-bar i {
+    color: var(--spotify-light-gray);
+    margin-right: 10px;
+}
+
+/* API 키 오류 메시지 및 폼 스타일 */
+.api-key-error {
+    background-color: var(--spotify-dark-gray);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 4px solid #ff6b6b;
+}
+
+.api-key-form {
+    margin-top: 15px;
+}
+
+.api-key-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.api-key-form input {
+    background-color: var(--spotify-black);
+    border: 1px solid var(--spotify-gray);
+    color: var(--spotify-white);
+    padding: 8px 12px;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+}

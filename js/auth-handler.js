@@ -18,10 +18,10 @@ function log(message) {
 const config = {
     // API 키 (클라이언트 ID)
     clientId: null, // 초기값은 null로 설정
-    
+
     // 리디렉션 URI
     redirectUri: window.location.origin + window.location.pathname,
-    
+
     // 권한 범위
     scopes: [
         'user-read-private',
@@ -40,13 +40,13 @@ const config = {
 function initApiKey() {
     // 환경 변수에서 API 키 확인
     let apiKey = window.__env__?.SPOTIFY_API_KEY;
-    
+
     // API 키가 플레이스홀더인 경우 체크
     if (apiKey === '%SPOTIFY_API_KEY%') {
         log('환경 변수의 API 키가 플레이스홀더 상태입니다');
         apiKey = null;
     }
-    
+
     // 로컬 스토리지에서 API 키 확인
     if (!apiKey) {
         apiKey = localStorage.getItem('spotify_api_key');
@@ -54,17 +54,17 @@ function initApiKey() {
             log('로컬 스토리지에서 API 키를 불러왔습니다');
         }
     }
-    
+
     // API 키 설정
     config.clientId = apiKey;
-    
+
     // API 키 유효성 확인
     if (!apiKey) {
         log('유효한 API 키가 없습니다');
         showApiKeyError();
         return false;
     }
-    
+
     log('API 키가 설정되었습니다');
     return true;
 }
@@ -81,7 +81,7 @@ function showApiKeyError() {
         errorElement.className = 'error-message';
         document.querySelector('main').prepend(errorElement);
     }
-    
+
     // 폼 HTML 생성
     errorElement.innerHTML = `
         <div class="api-key-error">
@@ -94,7 +94,7 @@ function showApiKeyError() {
             </div>
         </div>
     `;
-    
+
     // 입력된 API 키 저장 이벤트 등록
     setTimeout(() => {
         const saveButton = document.getElementById('save-api-key');
@@ -102,7 +102,7 @@ function showApiKeyError() {
             saveButton.addEventListener('click', saveApiKeyHandler);
         }
     }, 100);
-    
+
     errorElement.style.display = 'block';
 }
 
@@ -112,18 +112,18 @@ function showApiKeyError() {
 function saveApiKeyHandler() {
     const inputElement = document.getElementById('api-key-input');
     const newApiKey = inputElement?.value?.trim();
-    
+
     if (newApiKey) {
         localStorage.setItem('spotify_api_key', newApiKey);
         config.clientId = newApiKey;
         log('새 API 키가 저장되었습니다');
-        
+
         // 오류 메시지 숨기기
         const errorElement = document.getElementById('error-message');
         if (errorElement) {
             errorElement.style.display = 'none';
         }
-        
+
         // 페이지 새로고침
         window.location.reload();
     } else {
@@ -136,15 +136,15 @@ function saveApiKeyHandler() {
  */
 function authorize() {
     log('인증 프로세스 시작');
-    
+
     // API 키 초기화 및 확인
     if (!initApiKey()) {
         log('API 키가 유효하지 않아 인증 프로세스를 중단합니다');
         return;
     }
-    
+
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${config.clientId}&response_type=token&redirect_uri=${encodeURIComponent(config.redirectUri)}&scope=${encodeURIComponent(config.scopes.join(' '))}`;
-    
+
     log(`인증 URL로 리디렉션: ${authUrl}`);
     window.location.href = authUrl;
 }
@@ -173,20 +173,20 @@ function handleAuthentication(onSuccess) {
             if (typeof onSuccess === 'function') {
                 onSuccess(token);
             }
-            
+
             return true;
         }
     } else if (localStorage.getItem('spotify_access_token')) {
         log('저장된 토큰 발견');
-        
+
         // 성공 콜백 호출
         if (typeof onSuccess === 'function') {
             onSuccess(localStorage.getItem('spotify_access_token'));
         }
-        
+
         return true;
     }
-    
+
     return false;
 }
 

@@ -1,12 +1,14 @@
 /**
  * env.js
- * 환경 변수를 로드하는 스크립트
- * 빌드 시 GitHub Actions에서 환경 변수 값을 주입
+ * 이 파일은 더 이상 사용되지 않습니다.
+ * environment-config.js 파일로 통합되었습니다.
+ * 하위 호환성을 위해 남겨두었습니다.
  */
 
-// 전역 환경 변수 객체 생성
-window.__env__ = window.__env__ || {};
-
-// GitHub Repository secrets의 APIKEY 값을 사용
-// 이 값은 GitHub Actions에서 빌드 시 SPOTIFY_API_KEY로 대체됨
-window.__env__.SPOTIFY_API_KEY = '%SPOTIFY_API_KEY%';
+// environment-config.js 파일을 로드 (이미 로드되었는지 확인)
+if (!window.__env__) {
+    const script = document.createElement('script');
+    script.src = 'js/environment-config.js';
+    document.head.appendChild(script);
+    console.warn('[DEPRECATED] env.js 대신 environment-config.js를 직접 사용하세요.');
+}

@@ -33,9 +33,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Replace API Key
+      - name: API 키 설정
         run: |
-          sed -i 's/%SPOTIFY_API_KEY%/${{ secrets.APIKEY }}/g' env.js
+          sed -i 's/%SPOTIFY_API_KEY%/${{ secrets.APIKEY }}/g' js/environment-config.js
+        shell: bash
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

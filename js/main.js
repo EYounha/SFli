@@ -78,10 +78,10 @@ function registerEventListeners() {
  */
 function initApp() {
     log('앱 초기화 시작');
-    
+
     // 전역 모듈 객체 생성
     window.appModule = {
-        authorize: window.authHandler?.authorize || function() {
+        authorize: window.authHandler?.authorize || function () {
             log('인증 핸들러가 아직 로드되지 않았습니다');
         }
     };
@@ -95,7 +95,7 @@ function initApp() {
     } else {
         log('인증 핸들러가 로드되지 않았습니다');
     }
-    
+
     log('앱 초기화 완료');
 }
 

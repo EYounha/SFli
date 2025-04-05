@@ -30,22 +30,61 @@ import {
 import config from './config.js';
 
 /**
+ * 디버그 로그 출력 헬퍼 함수
+ * @param {string} component - 컴포넌트 이름
+ * @param {string} message - 로그 메시지
+ * @param {any} data - 추가 데이터(선택 사항)
+ */
+function log(component, message, data) {
+    // 콘솔 직접 사용 (config가 아직 로드되지 않았을 수 있음)
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDebug = urlParams.get('debug') === 'true';
+    
+    if (isDebug) {
+        if (data !== undefined) {
+            console.log(`[DEBUG][${component}] ${message}`, data);
+        } else {
+            console.log(`[DEBUG][${component}] ${message}`);
+        }
+    }
+}
+
+/**
  * 애플리케이션 초기화 함수
  * 앱 시작 시 필요한 이벤트 리스너 등록 및 인증 상태 확인
  */
 function initApp() {
-    config.debug.log('App', '앱 초기화 시작');
-    
+    log('App', '앱 초기화 시작');
+
     // DOM 요소 초기화
     initializeElements();
-    
+
     // 이벤트 리스너 등록
     registerEventListeners();
-    
+
     // 페이지 로드 시 인증 상태 확인
     checkAuthentication();
-    
-    config.debug.log('App', '앱 초기화 완료');
+
+    log('App', '앱 초기화 완료');
+
+    // 전역 객체로 필요한 함수들 노출
+    exposeGlobalFunctions();
+}
+
+/**
+ * 주요 함수들을 전역 객체로 노출
+ * 다른 스크립트에서 접근 가능하도록 함
+ */
+function exposeGlobalFunctions() {
+    log('App', '앱 함수들을 전역으로 노출');
+
+    // window 객체에 앱 모듈 등록
+    window.appModule = {
+        authorize: authorize,
+        login: authorize, // 별칭
+        loadPlaylists: loadPlaylists,
+        showPlaylistDetails: showPlaylistDetails
+    };
 }
 
 /**
@@ -54,15 +93,15 @@ function initApp() {
 function registerEventListeners() {
     // 버튼이 DOM에 존재하는지 확인 후 이벤트 리스너 등록
     if (elements.loginBtn) {
-        config.debug.log('App', '로그인 버튼에 이벤트 리스너 등록');
+        log('App', '로그인 버튼에 이벤트 리스너 등록');
         elements.loginBtn.addEventListener('click', () => {
-            config.debug.log('App', '로그인 버튼 클릭됨');
+            log('App', '로그인 버튼 클릭됨');
             authorize();
         });
     } else {
-        config.debug.error('App', '로그인 버튼을 찾을 수 없습니다');
+        console.error('로그인 버튼을 찾을 수 없습니다');
     }
-    
+
     if (elements.loginWelcomeBtn) {
         config.debug.log('App', '환영 페이지 로그인 버튼에 이벤트 리스너 등록');
         elements.loginWelcomeBtn.addEventListener('click', () => {
@@ -70,7 +109,7 @@ function registerEventListeners() {
             authorize();
         });
     }
-    
+
     // 검색 입력 이벤트 리스너
     if (elements.searchInput) {
         elements.searchInput.addEventListener('input', (e) => {
@@ -78,7 +117,7 @@ function registerEventListeners() {
             filterPlaylists(e.target.value);
         });
     }
-    
+
     // 플레이리스트 생성 버튼 이벤트 리스너
     if (elements.createPlaylistBtn) {
         elements.createPlaylistBtn.addEventListener('click', () => {
@@ -94,22 +133,22 @@ function registerEventListeners() {
  */
 function checkAuthentication() {
     config.debug.log('App', '인증 상태 확인 중');
-    
+
     // URL에서 액세스 토큰 확인
     const token = getTokenFromUrl();
-    
+
     if (token) {
         config.debug.log('App', 'URL에서 액세스 토큰 발견');
-        
+
         // URL에 토큰이 있는 경우 저장하고 해시 제거
         saveToken(token);
         window.history.replaceState({}, document.title, window.location.pathname);
-        
+
         // 사용자 정보 및 플레이리스트 로드
         loadUserData();
     } else if (isAuthenticated()) {
         config.debug.log('App', '저장된 액세스 토큰으로 인증됨');
-        
+
         // 저장된 토큰이 있는 경우
         loadUserData();
     } else {
@@ -176,6 +215,7 @@ document.addEventListener('DOMContentLoaded', initApp);
 
 // 모듈 내보내기 (다른 파일에서 필요한 경우)
 export {
+    authorize,
     loadPlaylists,
     showPlaylistDetails
 };

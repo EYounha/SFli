@@ -7,26 +7,109 @@ import config from './config.js';
 import { showToast } from './ui.js';
 
 /**
+ * 디버그 로그 출력 헬퍼 함수 (config 객체를 사용할 수 없는 경우 대비)
+ * @param {string} message - 로그 메시지
+ * @param {any} data - 추가 데이터(선택 사항)
+ */
+function debugLog(message, data) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDebug = urlParams.get('debug') === 'true';
+    
+    if (isDebug) {
+        const prefix = '[DEBUG][Auth]';
+        if (data !== undefined) {
+            console.log(`${prefix} ${message}`, data);
+        } else {
+            console.log(`${prefix} ${message}`);
+        }
+    }
+}
+
+/**
  * 스포티파이 인증 페이지로 리디렉션하는 함수
  * OAuth 2.0 인증 흐름을 시작합니다.
  */
 function authorize() {
-    config.debug.log('Auth', '인증 프로세스 시작');
-    
-    // API 키가 설정되어 있는지 확인
-    if (!config.isApiKeyConfigured()) {
-        config.debug.error('Auth', 'API 키가 설정되지 않음');
-        // API 키가 없을 경우 토스트 메시지로 안내
-        showToast('스포티파이 API 키(클라이언트 ID)가 설정되지 않았습니다. 관리자에게 문의하세요.', 'error', 5000);
-        return;
+    // 안전하게 config 객체 사용을 시도하고, 없으면 fallback 로깅 사용
+    try {
+        config.debug.log('Auth', '인증 프로세스 시작');
+    } catch (e) {
+        debugLog('인증 프로세스 시작');
     }
     
-    // 인증 URL 생성 및 리디렉션
-    const { clientId, redirectUri, scopes } = config.spotify;
-    const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(' '))}`;
+    try {
+        // API 키가 설정되어 있는지 확인
+        const apiKey = getApiKey();
+        
+        if (!apiKey) {
+            debugLog('API 키가 설정되지 않음');
+            // 안전하게 UI 함수 호출
+            try {
+                showToast('스포티파이 API 키(클라이언트 ID)가 설정되지 않았습니다. 관리자에게 문의하세요.', 'error', 5000);
+            } catch (e) {
+                alert('스포티파이 API 키가 설정되지 않았습니다. 관리자에게 문의하세요.');
+            }
+            return;
+        }
+        
+        // 리디렉션 URI 및 스코프 설정
+        const redirectUri = window.location.origin + window.location.pathname;
+        const scopes = [
+            'user-read-private',
+            'user-read-email',
+            'playlist-read-private',
+            'playlist-read-collaborative',
+            'playlist-modify-public',
+            'playlist-modify-private'
+        ];
+        
+        // 인증 URL 생성 및 리디렉션
+        const authUrl = `https://accounts.spotify.com/authorize?client_id=${apiKey}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(' '))}`;
+        
+        debugLog('인증 URL로 리디렉션:', authUrl);
+        window.location.href = authUrl;
+        
+    } catch (error) {
+        debugLog('인증 프로세스 오류:', error);
+        console.error('인증 프로세스 오류:', error);
+    }
+}
+
+/**
+ * API 키(클라이언트 ID)를 가져오는 함수
+ * 여러 소스에서 확인 (config, env, 로컬 스토리지)
+ * @returns {string|null} API 키 또는 null
+ */
+function getApiKey() {
+    // config 객체에서 시도
+    try {
+        if (config && config.spotify && config.spotify.clientId) {
+            return config.spotify.clientId;
+        }
+    } catch (e) {
+        debugLog('config에서 API 키를 가져오는 중 오류 발생');
+    }
     
-    config.debug.log('Auth', '인증 URL로 리디렉션:', authUrl);
-    window.location.href = authUrl;
+    // window.__env__ 객체에서 확인
+    try {
+        if (window.__env__ && window.__env__.SPOTIFY_API_KEY) {
+            const key = window.__env__.SPOTIFY_API_KEY;
+            if (key !== '%SPOTIFY_API_KEY%') { // 치환되지 않은 플레이스홀더 감지
+                return key;
+            }
+        }
+    } catch (e) {
+        debugLog('env에서 API 키를 가져오는 중 오류 발생');
+    }
+    
+    // 로컬 스토리지에서 확인
+    try {
+        return localStorage.getItem('spotify_api_key');
+    } catch (e) {
+        debugLog('로컬 스토리지에서 API 키를 가져오는 중 오류 발생');
+    }
+    
+    return null;
 }
 
 /**
@@ -37,13 +120,13 @@ function getTokenFromUrl() {
     config.debug.log('Auth', 'URL 해시에서 토큰 추출 시도');
     const params = new URLSearchParams(window.location.hash.substring(1));
     const token = params.get('access_token');
-    
+
     if (token) {
         config.debug.log('Auth', '토큰 추출 성공');
     } else {
         config.debug.log('Auth', '토큰이 URL에 없음');
     }
-    
+
     return token;
 }
 

@@ -55,7 +55,7 @@ const config = {
     // 디버그 모드 설정
     debug: {
         enabled: isDebugMode,
-        
+
         /**
          * 디버그 로그를 출력하는 함수
          * @param {string} component - 로그를 출력하는 컴포넌트/모듈 이름
@@ -64,17 +64,17 @@ const config = {
          */
         log(component, message, data) {
             if (!this.enabled) return;
-            
+
             const timestamp = new Date().toISOString();
             const logPrefix = `[DEBUG][${timestamp}][${component}]`;
-            
+
             if (data !== undefined) {
                 console.log(`${logPrefix} ${message}`, data);
             } else {
                 console.log(`${logPrefix} ${message}`);
             }
         },
-        
+
         /**
          * 디버그 경고를 출력하는 함수
          * @param {string} component - 로그를 출력하는 컴포넌트/모듈 이름
@@ -83,17 +83,17 @@ const config = {
          */
         warn(component, message, data) {
             if (!this.enabled) return;
-            
+
             const timestamp = new Date().toISOString();
             const logPrefix = `[DEBUG][${timestamp}][${component}]`;
-            
+
             if (data !== undefined) {
                 console.warn(`${logPrefix} ${message}`, data);
             } else {
                 console.warn(`${logPrefix} ${message}`);
             }
         },
-        
+
         /**
          * 디버그 에러를 출력하는 함수
          * @param {string} component - 로그를 출력하는 컴포넌트/모듈 이름
@@ -102,10 +102,10 @@ const config = {
          */
         error(component, message, data) {
             if (!this.enabled) return;
-            
+
             const timestamp = new Date().toISOString();
             const logPrefix = `[DEBUG][${timestamp}][${component}]`;
-            
+
             if (data !== undefined) {
                 console.error(`${logPrefix} ${message}`, data);
             } else {

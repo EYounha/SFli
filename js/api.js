@@ -29,30 +29,30 @@ function getHeaders() {
 async function apiRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = { ...getHeaders(), ...options.headers };
-    
+
     config.debug.log('API', `요청: ${options.method || 'GET'} ${endpoint}`);
-    
+
     try {
         const response = await fetch(url, {
             ...options,
             headers
         });
-        
+
         config.debug.log('API', `응답 상태: ${response.status} (${response.statusText})`);
-        
+
         // 인증 오류 처리
         if (response.status === 401) {
             config.debug.error('API', '인증 오류: 토큰이 만료되었거나 유효하지 않음');
             removeToken();
             throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
         }
-        
+
         // 기타 오류 처리
         if (!response.ok) {
             config.debug.error('API', `API 오류: ${response.status} ${response.statusText}`);
             throw new Error(`API 요청 실패: ${response.statusText}`);
         }
-        
+
         const data = await response.json();
         config.debug.log('API', '응답 데이터 수신', data);
         return data;

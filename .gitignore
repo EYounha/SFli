@@ -1,0 +1,6 @@
+# 에디터 파일
+.vscode/
+# 환경 설정 파일
+.env
+
+prompts

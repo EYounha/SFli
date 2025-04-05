@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SportyFli - 스포티파이 플레이리스트 관리자</title>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fab fa-spotify"></i>
+                    <span>SportyFli</span>
+                </div>
+                <button id="login-btn" class="login-btn">스포티파이로 로그인</button>
+                <div id="user-profile" class="user-profile">
+                    <img id="user-img" src alt="프로필 이미지">
+                    <span id="user-name"></span>
+                </div>
+            </header>
+
+            <main>
+                <section id="welcome-section" class="welcome-section">
+                    <h1>스포티파이 플레이리스트 관리자</h1>
+                    <p>스포티파이 계정으로 로그인하여 플레이리스트를 쉽게 관리하세요.</p>
+                    <button id="login-welcome-btn" class="login-btn">로그인하여
+                        시작하기</button>
+                </section>
+
+                <section id="playlist-section" class="hidden">
+                    <div class="controls">
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input"
+                                placeholder="플레이리스트 검색...">
+                        </div>
+                        <button id="create-playlist-btn" class="login-btn">
+                            <i class="fas fa-plus"></i> 새 플레이리스트
+                        </button>
+                    </div>
+
+                    <div id="loading" class="loading">
+                        <p>로딩 중...</p>
+                    </div>
+
+                    <div id="error-message" class="error-message"></div>
+
+                    <div id="playlist-container"
+                        class="playlist-container"></div>
+                </section>
+            </main>
+        </div>
+
+        <!-- 환경 변수 스크립트 (먼저 로드) -->
+        <script src="js/env.js"></script>
+        <!-- 모듈 스크립트 -->
+        <script type="module" src="js/app.js"></script>
+    </body>
+</html>

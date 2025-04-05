@@ -4,6 +4,16 @@
  */
 
 /**
+ * URL에서 파라미터 값을 가져오는 함수
+ * @param {string} paramName - 가져올 파라미터 이름
+ * @returns {string|null} 파라미터 값 또는 null
+ */
+function getUrlParam(paramName) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(paramName);
+}
+
+/**
  * 환경 변수에서 API 키를 가져오는 함수
  * 1. 프로세스 환경 변수에서 확인 (GitHub Actions 등에서 사용)
  * 2. window.__env__ 객체에서 확인 (로컬 환경에서 env.js 통해 로드)
@@ -35,10 +45,75 @@ function saveApiKey(apiKey) {
     }
 }
 
+// URL에서 debug 파라미터 확인하여 디버그 모드 설정
+const isDebugMode = getUrlParam('debug') === 'true';
+
 /**
  * 애플리케이션 설정 객체
  */
 const config = {
+    // 디버그 모드 설정
+    debug: {
+        enabled: isDebugMode,
+        
+        /**
+         * 디버그 로그를 출력하는 함수
+         * @param {string} component - 로그를 출력하는 컴포넌트/모듈 이름
+         * @param {string} message - 출력할 메시지
+         * @param {any} data - 추가 데이터(선택 사항)
+         */
+        log(component, message, data) {
+            if (!this.enabled) return;
+            
+            const timestamp = new Date().toISOString();
+            const logPrefix = `[DEBUG][${timestamp}][${component}]`;
+            
+            if (data !== undefined) {
+                console.log(`${logPrefix} ${message}`, data);
+            } else {
+                console.log(`${logPrefix} ${message}`);
+            }
+        },
+        
+        /**
+         * 디버그 경고를 출력하는 함수
+         * @param {string} component - 로그를 출력하는 컴포넌트/모듈 이름
+         * @param {string} message - 출력할 메시지
+         * @param {any} data - 추가 데이터(선택 사항)
+         */
+        warn(component, message, data) {
+            if (!this.enabled) return;
+            
+            const timestamp = new Date().toISOString();
+            const logPrefix = `[DEBUG][${timestamp}][${component}]`;
+            
+            if (data !== undefined) {
+                console.warn(`${logPrefix} ${message}`, data);
+            } else {
+                console.warn(`${logPrefix} ${message}`);
+            }
+        },
+        
+        /**
+         * 디버그 에러를 출력하는 함수
+         * @param {string} component - 로그를 출력하는 컴포넌트/모듈 이름
+         * @param {string} message - 출력할 메시지
+         * @param {any} data - 추가 데이터(선택 사항)
+         */
+        error(component, message, data) {
+            if (!this.enabled) return;
+            
+            const timestamp = new Date().toISOString();
+            const logPrefix = `[DEBUG][${timestamp}][${component}]`;
+            
+            if (data !== undefined) {
+                console.error(`${logPrefix} ${message}`, data);
+            } else {
+                console.error(`${logPrefix} ${message}`);
+            }
+        }
+    },
+
     // 스포티파이 API 관련 설정
     spotify: {
         // API 키 (클라이언트 ID)
@@ -69,6 +144,12 @@ const config = {
         saveApiKey(apiKey);
     }
 };
+
+// 디버그 모드 시작 로그
+if (isDebugMode) {
+    config.debug.log('Config', '디버그 모드가 활성화되었습니다.');
+    config.debug.log('Config', 'URL 파라미터:', window.location.search);
+}
 
 // 모듈 내보내기
 export default config;

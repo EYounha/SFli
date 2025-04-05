@@ -27,23 +27,25 @@ import {
     filterPlaylists
 } from './ui.js';
 
+import config from './config.js';
+
 /**
  * 애플리케이션 초기화 함수
  * 앱 시작 시 필요한 이벤트 리스너 등록 및 인증 상태 확인
  */
 function initApp() {
-    console.log('앱 초기화 시작');
-
+    config.debug.log('App', '앱 초기화 시작');
+    
     // DOM 요소 초기화
     initializeElements();
-
+    
     // 이벤트 리스너 등록
     registerEventListeners();
-
+    
     // 페이지 로드 시 인증 상태 확인
     checkAuthentication();
-
-    console.log('앱 초기화 완료');
+    
+    config.debug.log('App', '앱 초기화 완료');
 }
 
 /**
@@ -52,33 +54,37 @@ function initApp() {
 function registerEventListeners() {
     // 버튼이 DOM에 존재하는지 확인 후 이벤트 리스너 등록
     if (elements.loginBtn) {
-        console.log('로그인 버튼에 이벤트 리스너 등록');
+        config.debug.log('App', '로그인 버튼에 이벤트 리스너 등록');
         elements.loginBtn.addEventListener('click', () => {
-            console.log('로그인 버튼 클릭');
+            config.debug.log('App', '로그인 버튼 클릭됨');
             authorize();
         });
     } else {
-        console.error('로그인 버튼을 찾을 수 없습니다');
+        config.debug.error('App', '로그인 버튼을 찾을 수 없습니다');
     }
-
+    
     if (elements.loginWelcomeBtn) {
-        console.log('환영 페이지 로그인 버튼에 이벤트 리스너 등록');
+        config.debug.log('App', '환영 페이지 로그인 버튼에 이벤트 리스너 등록');
         elements.loginWelcomeBtn.addEventListener('click', () => {
-            console.log('환영 페이지 로그인 버튼 클릭');
+            config.debug.log('App', '환영 페이지 로그인 버튼 클릭됨');
             authorize();
         });
     }
-
+    
     // 검색 입력 이벤트 리스너
     if (elements.searchInput) {
         elements.searchInput.addEventListener('input', (e) => {
+            config.debug.log('App', '검색 입력:', e.target.value);
             filterPlaylists(e.target.value);
         });
     }
-
+    
     // 플레이리스트 생성 버튼 이벤트 리스너
     if (elements.createPlaylistBtn) {
-        elements.createPlaylistBtn.addEventListener('click', showCreatePlaylistModal);
+        elements.createPlaylistBtn.addEventListener('click', () => {
+            config.debug.log('App', '플레이리스트 생성 버튼 클릭됨');
+            showCreatePlaylistModal();
+        });
     }
 }
 
@@ -87,21 +93,28 @@ function registerEventListeners() {
  * URL 파라미터에서 토큰을 추출하거나 저장된 토큰을 확인
  */
 function checkAuthentication() {
+    config.debug.log('App', '인증 상태 확인 중');
+    
     // URL에서 액세스 토큰 확인
     const token = getTokenFromUrl();
-
+    
     if (token) {
+        config.debug.log('App', 'URL에서 액세스 토큰 발견');
+        
         // URL에 토큰이 있는 경우 저장하고 해시 제거
         saveToken(token);
         window.history.replaceState({}, document.title, window.location.pathname);
-
+        
         // 사용자 정보 및 플레이리스트 로드
         loadUserData();
     } else if (isAuthenticated()) {
+        config.debug.log('App', '저장된 액세스 토큰으로 인증됨');
+        
         // 저장된 토큰이 있는 경우
         loadUserData();
+    } else {
+        config.debug.log('App', '인증되지 않음, 기본 화면 표시');
     }
-    // 인증되지 않은 경우 기본 화면 유지
 }
 
 /**

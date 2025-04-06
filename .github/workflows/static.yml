@@ -35,7 +35,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: API 키 설정
         run: |
-          sed -i 's/%SPOTIFY_API_KEY%/${{ secrets.APIKEY }}/g' js/environment-config.js
+          sed -i 's/%SPOTIFY_API_KEY%/${{ secrets.APIKEY }}/g'
         shell: bash
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

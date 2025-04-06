@@ -163,7 +163,7 @@ function authorize() {
     // 특정 환경에 따른 URI 조정
     if (isGitHubPages) {
         // GitHub Pages용 리디렉션 URI
-        finalRedirectUri = 'https://eyounha.github.io/SportyFli/';
+        finalRedirectUri = 'https://eyounha.github.io/SFli/';
         log(`GitHub Pages 환경 감지, 리디렉션 URI: ${finalRedirectUri}`);
     }
 

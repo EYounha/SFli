@@ -1,4 +1,4 @@
-# SportyFli
+# SFli
 
 <div align="center">
     <img src="https://img.shields.io/badge/Made%20with-GitHub%20Copilot-brightgreen?style=for-the-badge&logo=github" alt="Made with GitHub Copilot">

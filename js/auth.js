@@ -5,7 +5,6 @@
 
 import config from './config.js';
 import { showToast } from './ui.js';
-import DEBUG_SPOTIFY_API_KEY from './debug_key.js';
 
 /**
  * 디버그 로그 출력 헬퍼 함수 (config 객체를 사용할 수 없는 경우 대비)
@@ -98,9 +97,9 @@ function getApiKey() {
         const urlParams = new URLSearchParams(window.location.search);
         const isDebug = urlParams.get('debug') === 'true';
 
-        if (isDebug && DEBUG_SPOTIFY_API_KEY && DEBUG_SPOTIFY_API_KEY !== 'YOUR_SPOTIFY_CLIENT_ID_HERE') {
+        if (isDebug && window.DEBUG_SPOTIFY_API_KEY && window.DEBUG_SPOTIFY_API_KEY !== 'YOUR_ACTUAL_SPOTIFY_CLIENT_ID') {
             debugLog('debug_key.js에서 API 키 사용');
-            return DEBUG_SPOTIFY_API_KEY;
+            return window.DEBUG_SPOTIFY_API_KEY;
         }
     }
 

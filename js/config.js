@@ -3,7 +3,7 @@
  * 애플리케이션의 환경 설정 관련 변수를 관리하는 모듈
  */
 
-import DEBUG_SPOTIFY_API_KEY from './debug_key.js';
+// import DEBUG_SPOTIFY_API_KEY from './debug_key.js'; // 제거
 
 /**
  * URL에서 파라미터 값을 가져오는 함수
@@ -37,8 +37,8 @@ function getApiKey() {
     const isGitHubPages = isGitHubPagesEnvironment();
 
     // GitHub Pages 환경이 아니고 디버그 모드일 때만 debug_key.js에서 키 사용
-    if (!isGitHubPages && isDebugMode && DEBUG_SPOTIFY_API_KEY && DEBUG_SPOTIFY_API_KEY !== 'YOUR_SPOTIFY_CLIENT_ID_HERE') {
-        return DEBUG_SPOTIFY_API_KEY;
+    if (!isGitHubPages && isDebugMode && window.DEBUG_SPOTIFY_API_KEY && window.DEBUG_SPOTIFY_API_KEY !== 'YOUR_ACTUAL_SPOTIFY_CLIENT_ID') {
+        return window.DEBUG_SPOTIFY_API_KEY;
     }
 
     // 브라우저 환경에서 window.__env__ 객체 확인 (env.js에서 설정)

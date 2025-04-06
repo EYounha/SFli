@@ -58,9 +58,15 @@
 
         <!-- 스크립트 로드 순서 -->
         <!-- 1. 환경 설정 (head에서 로드됨) -->
-        <!-- 2. 인증 핸들러 -->
+        <!-- 2. API 키 관리자 -->
+        <script src="js/api-key-manager.js"></script>
+        <!-- 3. 인증 핸들러 -->
         <script src="js/auth-handler.js"></script>
-        <!-- 3. 메인 애플리케이션 -->
+        <!-- 4. API 서비스 -->
+        <script src="js/api-service.js"></script>
+        <!-- 5. UI 관리자 -->
+        <script src="js/ui-manager.js"></script>
+        <!-- 6. 메인 애플리케이션 -->
         <script src="js/main.js"></script>
     </body>
 </html>

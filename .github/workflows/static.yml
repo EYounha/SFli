@@ -35,9 +35,9 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Spotify API 변수 설정
         run: |
-          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_CLIENT_ID%/${{ secrets.SPOTIFY_ID }}/g" {} \;
-          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_CLIENT_SECRET%/${{ secrets.SPOTIFY_SECRET }}/g" {} \;
-          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_REDIRECT_URI%/${{ secrets.SPOTIFY_REDIRECT_URI }}/g" {} \;
+          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_CLIENT_ID%/${{ secrets.ID }}/g" {} \;
+          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_CLIENT_SECRET%/${{ secrets.SECRET }}/g" {} \;
+          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_REDIRECT_URI%/${{ secrets.REDIRECT_URI }}/g" {} \;
         shell: bash
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

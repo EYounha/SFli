@@ -5,6 +5,7 @@
 
 import config from './config.js';
 import { showToast } from './ui.js';
+import DEBUG_SPOTIFY_API_KEY from './debug_key.js';
 
 /**
  * 디버그 로그 출력 헬퍼 함수 (config 객체를 사용할 수 없는 경우 대비)
@@ -76,11 +77,33 @@ function authorize() {
 }
 
 /**
+ * 현재 환경이 GitHub Pages인지 확인
+ * @returns {boolean} GitHub Pages 환경 여부
+ */
+function isGitHubPagesEnvironment() {
+    return window.location.hostname === 'eyounha.github.io';
+}
+
+/**
  * API 키(클라이언트 ID)를 가져오는 함수
- * 여러 소스에서 확인 (config, env, 로컬 스토리지)
+ * 여러 소스에서 확인 (debug_key, config, env, 로컬 스토리지)
  * @returns {string|null} API 키 또는 null
  */
 function getApiKey() {
+    // GitHub Pages 환경에서는 debug_key.js를 사용하지 않음
+    if (isGitHubPagesEnvironment()) {
+        debugLog('GitHub Pages 환경 감지: debug_key.js 사용 안함');
+    } else {
+        // 디버그 모드일 때 debug_key.js에서 API 키 사용
+        const urlParams = new URLSearchParams(window.location.search);
+        const isDebug = urlParams.get('debug') === 'true';
+
+        if (isDebug && DEBUG_SPOTIFY_API_KEY && DEBUG_SPOTIFY_API_KEY !== 'YOUR_SPOTIFY_CLIENT_ID_HERE') {
+            debugLog('debug_key.js에서 API 키 사용');
+            return DEBUG_SPOTIFY_API_KEY;
+        }
+    }
+
     // config 객체에서 시도
     try {
         if (config && config.spotify && config.spotify.clientId) {

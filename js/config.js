@@ -3,6 +3,8 @@
  * 애플리케이션의 환경 설정 관련 변수를 관리하는 모듈
  */
 
+import DEBUG_SPOTIFY_API_KEY from './debug_key.js';
+
 /**
  * URL에서 파라미터 값을 가져오는 함수
  * @param {string} paramName - 가져올 파라미터 이름
@@ -14,13 +16,31 @@ function getUrlParam(paramName) {
 }
 
 /**
+ * 현재 환경이 GitHub Pages인지 확인
+ * @returns {boolean} GitHub Pages 환경 여부
+ */
+function isGitHubPagesEnvironment() {
+    return window.location.hostname === 'eyounha.github.io';
+}
+
+/**
  * 환경 변수에서 API 키를 가져오는 함수
- * 1. 프로세스 환경 변수에서 확인 (GitHub Actions 등에서 사용)
- * 2. window.__env__ 객체에서 확인 (로컬 환경에서 env.js 통해 로드)
- * 3. 로컬 스토리지에서 확인 (사용자가 직접 입력한 경우)
+ * 1. 디버그 모드일 때 debug_key.js에서 가져옴 (GitHub Pages 환경이 아닌 경우에만)
+ * 2. 프로세스 환경 변수에서 확인 (GitHub Actions 등에서 사용)
+ * 3. window.__env__ 객체에서 확인 (로컬 환경에서 env.js 통해 로드)
+ * 4. 로컬 스토리지에서 확인 (사용자가 직접 입력한 경우)
  * @returns {string|null} API 키 또는 null
  */
 function getApiKey() {
+    // 디버그 모드 확인
+    const isDebugMode = getUrlParam('debug') === 'true';
+    const isGitHubPages = isGitHubPagesEnvironment();
+
+    // GitHub Pages 환경이 아니고 디버그 모드일 때만 debug_key.js에서 키 사용
+    if (!isGitHubPages && isDebugMode && DEBUG_SPOTIFY_API_KEY && DEBUG_SPOTIFY_API_KEY !== 'YOUR_SPOTIFY_CLIENT_ID_HERE') {
+        return DEBUG_SPOTIFY_API_KEY;
+    }
+
     // 브라우저 환경에서 window.__env__ 객체 확인 (env.js에서 설정)
     if (typeof window !== 'undefined' && window.__env__ && window.__env__.SPOTIFY_API_KEY) {
         return window.__env__.SPOTIFY_API_KEY;

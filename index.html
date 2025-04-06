@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SFli - 스포티파이 플레이리스트 관리</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/login.css">
+    </head>
+    <body>
+        <div class="container">
+            <header class="header">
+                <h1 class="logo">SFli</h1>
+                <p class="tagline">스포티파이 플레이리스트 관리 프로그램</p>
+            </header>
+
+            <main class="main-content">
+                <section id="login-section" class="section">
+                    <div class="login-container">
+                        <h2>스포티파이 계정으로 로그인</h2>
+                        <p>플레이리스트 관리를 위해 스포티파이 계정에 연결해주세요.</p>
+                        <button id="login-button" class="spotify-login-btn">
+                            스포티파이로 로그인
+                        </button>
+                    </div>
+                </section>
+
+                <section id="playlist-section" class="section hidden">
+                    <!-- 로그인 후 플레이리스트 관리 섹션이 여기에 표시됩니다 -->
+                </section>
+            </main>
+
+            <footer class="footer">
+                <p>&copy; 2025 SFli - 스포티파이 플레이리스트 관리 서비스</p>
+            </footer>
+        </div>
+
+        <!-- 자바스크립트 파일 -->
+        <script src="js/spotify-auth.js"></script>
+        <script src="js/spotify-api.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>

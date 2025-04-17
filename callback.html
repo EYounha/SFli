@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인증 중... - SFli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        
+        .spinner {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading" style="display: flex;">
+            <div class="spinner"></div>
+            <p>스포티파이 인증 처리 중...</p>
+            <p>잠시만 기다려 주세요.</p>
+        </div>
+    </div>
+    
+    <script>
+        // 메인 페이지로 리디렉션
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDebug = urlParams.get('debug') === 'true';
+            
+            // 원래 페이지로 리디렉션
+            setTimeout(() => {
+                window.location.href = '/' + (isDebug ? '?debug=true' : '');
+            }, 500);
+        };
+    </script>
+</body>
+</html>

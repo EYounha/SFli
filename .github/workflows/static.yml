@@ -37,7 +37,6 @@ jobs:
         run: |
           find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_CLIENT_ID%/${{ secrets.ID }}/g" {} \;
           find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_CLIENT_SECRET%/${{ secrets.SECRET }}/g" {} \;
-          find js -type f -name "*.js" -exec sed -i "s/%SPOTIFY_REDIRECT_URI%/${{ secrets.REDIRECT_URI }}/g" {} \;
         shell: bash
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

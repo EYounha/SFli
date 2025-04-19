@@ -35,7 +35,9 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         // 응답 상태 확인
         if (response.status === 401) {
             // 401 Unauthorized - 토큰 갱신 시도
-            SpotifyAuth.debugLog('인증 오류, 토큰 갱신 시도...');
+            if (SpotifyAuth.isDebugMode()) {
+                SpotifyAuth.debugLog('인증 오류, 토큰 갱신 시도...');
+            }
             await SpotifyAuth.refreshAccessToken();
             return apiRequest(endpoint, method, body); // 재시도
         }
@@ -58,7 +60,9 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
             return await response.text();
         }
     } catch (error) {
-        SpotifyAuth.debugLog('API 요청 오류:', error);
+        if (SpotifyAuth.isDebugMode()) {
+            SpotifyAuth.debugLog('API 요청 오류:', error);
+        }
         throw error;
     }
 }

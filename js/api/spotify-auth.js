@@ -4,7 +4,7 @@
 let SPOTIFY_CONFIG = {
     CLIENT_ID: '%SPOTIFY_CLIENT_ID%',
     CLIENT_SECRET: '%SPOTIFY_CLIENT_SECRET%',
-    REDIRECT_URI: '%SPOTIFY_REDIRECT_URI%',
+    REDIRECT_URI: window.location.origin + '/callback.html',
     AUTH_ENDPOINT: 'https://accounts.spotify.com/authorize',
     TOKEN_ENDPOINT: 'https://accounts.spotify.com/api/token',
     SCOPES: [
@@ -17,23 +17,6 @@ let SPOTIFY_CONFIG = {
     ]
 };
 
-// 디버그 키 로드 (로컬 개발 환경인 경우)
-async function loadCredentials() {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        try {
-            const debugCredentials = await import('/debug_key.js');
-            SPOTIFY_CONFIG.CLIENT_ID = debugCredentials.default.CLIENT_ID;
-            SPOTIFY_CONFIG.CLIENT_SECRET = debugCredentials.default.CLIENT_SECRET;
-            SPOTIFY_CONFIG.REDIRECT_URI = debugCredentials.default.REDIRECT_URI;
-            if (isDebugMode()) {
-                console.log('로컬 환경에서 스포티파이 API 키 로드됨');
-            }
-        } catch (error) {
-            console.error('debug_key.js 파일을 로드할 수 없습니다:', error);
-        }
-    }
-}
-
 // 디버그 모드 확인
 function isDebugMode() {
     return new URLSearchParams(window.location.search).get('debug') === 'true';
@@ -43,6 +26,36 @@ function isDebugMode() {
 function debugLog(...args) {
     if (isDebugMode()) {
         console.log('[SFli Debug]', ...args);
+    }
+}
+
+// 디버그 키 로드 (로컬 개발 환경인 경우)
+async function loadCredentials() {
+    // 리디렉션 URI 설정
+    const currentHost = window.location.hostname;
+    
+    if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+        try {
+            const debugCredentials = await import('/debug_key.js');
+            
+            SPOTIFY_CONFIG.CLIENT_ID = debugCredentials.default.CLIENT_ID;
+            SPOTIFY_CONFIG.CLIENT_SECRET = debugCredentials.default.CLIENT_SECRET;
+            
+            // 로컬 환경에서 디버그 키의 REDIRECT_URI 사용
+            if (debugCredentials.default.REDIRECT_URI) {
+                SPOTIFY_CONFIG.REDIRECT_URI = debugCredentials.default.REDIRECT_URI;
+            }
+            
+            if (isDebugMode()) {
+                debugLog('로컬 환경에서 스포티파이 API 키 로드됨');
+                debugLog('설정된 리디렉션 URI:', SPOTIFY_CONFIG.REDIRECT_URI);
+            }
+        } catch (error) {
+            console.error('debug_key.js 파일을 로드할 수 없습니다:', error);
+        }
+    } else if (isDebugMode()) {
+        // GitHub Pages 등에서는 환경 변수 사용
+        debugLog('프로덕션 환경, GitHub 시크릿 사용 예정');
     }
 }
 
@@ -59,7 +72,13 @@ function getAuthUrl() {
         scope: SPOTIFY_CONFIG.SCOPES.join(' ')
     });
     
-    return `${SPOTIFY_CONFIG.AUTH_ENDPOINT}?${params.toString()}`;
+    const authUrl = `${SPOTIFY_CONFIG.AUTH_ENDPOINT}?${params.toString()}`;
+    
+    if (isDebugMode()) {
+        debugLog('인증 URL 생성됨:', authUrl);
+    }
+    
+    return authUrl;
 }
 
 // 랜덤 문자열 생성 (state 용)
@@ -76,7 +95,10 @@ function generateRandomString(length) {
 
 // 인증 코드로 액세스 토큰 요청
 async function getAccessToken(code) {
-    debugLog('인증 코드로 액세스 토큰 요청 중...');
+    if (isDebugMode()) {
+        debugLog('인증 코드로 액세스 토큰 요청 중...');
+        debugLog('사용 중인 리디렉션 URI:', SPOTIFY_CONFIG.REDIRECT_URI);
+    }
     
     const params = new URLSearchParams({
         grant_type: 'authorization_code',
@@ -96,18 +118,26 @@ async function getAccessToken(code) {
         });
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.text();
+            if (isDebugMode()) {
+                debugLog('토큰 요청 실패:', response.status, errorData);
+            }
+            throw new Error(`토큰 요청 실패 (${response.status}): ${errorData}`);
         }
         
         const data = await response.json();
-        debugLog('토큰 응답 받음', data);
+        if (isDebugMode()) {
+            debugLog('토큰 응답 받음');
+        }
         
         // 토큰 저장
         saveTokenData(data);
         
         return data;
     } catch (error) {
-        debugLog('토큰 요청 오류:', error);
+        if (isDebugMode()) {
+            debugLog('토큰 요청 오류:', error);
+        }
         throw error;
     }
 }
@@ -121,7 +151,9 @@ function saveTokenData(data) {
     };
     
     localStorage.setItem('spotify_token_data', JSON.stringify(tokenData));
-    debugLog('토큰 데이터 저장됨');
+    if (isDebugMode()) {
+        debugLog('토큰 데이터 저장됨');
+    }
 }
 
 // 저장된 토큰 데이터 가져오기
@@ -132,7 +164,9 @@ function getTokenData() {
     try {
         return JSON.parse(tokenString);
     } catch (e) {
-        debugLog('토큰 데이터 파싱 오류:', e);
+        if (isDebugMode()) {
+            debugLog('토큰 데이터 파싱 오류:', e);
+        }
         return null;
     }
 }
@@ -150,11 +184,15 @@ function isTokenExpired() {
 async function refreshAccessToken() {
     const tokenData = getTokenData();
     if (!tokenData || !tokenData.refresh_token) {
-        debugLog('리프레시 토큰이 없습니다.');
+        if (isDebugMode()) {
+            debugLog('리프레시 토큰이 없습니다.');
+        }
         return null;
     }
     
-    debugLog('액세스 토큰 갱신 중...');
+    if (isDebugMode()) {
+        debugLog('액세스 토큰 갱신 중...');
+    }
     
     const params = new URLSearchParams({
         grant_type: 'refresh_token',
@@ -173,11 +211,17 @@ async function refreshAccessToken() {
         });
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.text();
+            if (isDebugMode()) {
+                debugLog('토큰 갱신 실패:', response.status, errorData);
+            }
+            throw new Error(`토큰 갱신 실패 (${response.status}): ${errorData}`);
         }
         
         const data = await response.json();
-        debugLog('토큰 갱신됨');
+        if (isDebugMode()) {
+            debugLog('토큰 갱신됨');
+        }
         
         // 새 액세스 토큰 저장 (리프레시 토큰은 같이 안 올 수도 있음)
         const newTokenData = {
@@ -190,7 +234,9 @@ async function refreshAccessToken() {
         
         return data;
     } catch (error) {
-        debugLog('토큰 갱신 오류:', error);
+        if (isDebugMode()) {
+            debugLog('토큰 갱신 오류:', error);
+        }
         throw error;
     }
 }
@@ -198,11 +244,15 @@ async function refreshAccessToken() {
 // 유효한 액세스 토큰 가져오기 (필요시 갱신)
 async function getValidAccessToken() {
     if (isTokenExpired()) {
-        debugLog('토큰이 만료되었거나 만료 예정입니다. 갱신 시도...');
+        if (isDebugMode()) {
+            debugLog('토큰이 만료되었거나 만료 예정입니다. 갱신 시도...');
+        }
         try {
             await refreshAccessToken();
         } catch (error) {
-            debugLog('토큰 갱신 실패, 인증이 필요합니다');
+            if (isDebugMode()) {
+                debugLog('토큰 갱신 실패, 인증이 필요합니다');
+            }
             return null;
         }
     }
@@ -220,7 +270,9 @@ function isLoggedIn() {
 function logout() {
     localStorage.removeItem('spotify_token_data');
     localStorage.removeItem('spotify_auth_state');
-    debugLog('로그아웃됨');
+    if (isDebugMode()) {
+        debugLog('로그아웃됨');
+    }
 }
 
 // 모듈 내보내기

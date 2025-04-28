@@ -2,6 +2,12 @@
 export default class AppUI {
     constructor() {
         this.initElements();
+        this.isDebugMode = new URLSearchParams(window.location.search).get('debug') === 'true';
+        
+        // 디버그 모드면 디버그 패널 초기화
+        if (this.isDebugMode) {
+            this.initDebugPanel();
+        }
     }
 
     // DOM 엘리먼트 참조 초기화
@@ -11,6 +17,43 @@ export default class AppUI {
         this.loggedInSection = document.getElementById('logged-in-section');
         this.userProfileSection = document.getElementById('user-profile');
         this.errorMessage = document.getElementById('error-message');
+        this.debugPanel = document.getElementById('debug-panel');
+    }
+    
+    // 디버그 패널 초기화
+    initDebugPanel() {
+        if (!this.debugPanel) return;
+        
+        // 디버그 패널 스타일 조정
+        this.debugPanel.style.display = 'block';
+        this.debugPanel.style.position = 'fixed';
+        this.debugPanel.style.bottom = '0';
+        this.debugPanel.style.right = '0';
+        this.debugPanel.style.zIndex = '9999';
+        
+        // 디버그 패널 토글 버튼 추가
+        const toggleButton = document.createElement('button');
+        toggleButton.textContent = '접기/펼치기';
+        toggleButton.className = 'debug-toggle-btn';
+        toggleButton.onclick = () => this.toggleDebugPanel();
+        
+        // 디버그 패널에 토글 버튼 추가
+        this.debugPanel.prepend(toggleButton);
+        
+        // 디버그 로그의 높이 설정
+        const debugLog = document.getElementById('debug-log');
+        if (debugLog) {
+            debugLog.style.maxHeight = '300px';
+            debugLog.style.overflowY = 'auto';
+        }
+    }
+    
+    // 디버그 패널 토글
+    toggleDebugPanel() {
+        const debugLog = document.getElementById('debug-log');
+        if (debugLog) {
+            debugLog.style.display = debugLog.style.display === 'none' ? 'block' : 'none';
+        }
     }
 
     // 로그인 화면 표시
@@ -18,6 +61,8 @@ export default class AppUI {
         this.hideLoading();
         this.loginSection.style.display = 'flex';
         this.loggedInSection.style.display = 'none';
+        
+        // 디버그 패널은 그대로 유지
     }
 
     // 로딩 화면 표시
@@ -25,11 +70,15 @@ export default class AppUI {
         this.loginSection.style.display = 'none';
         this.loggedInSection.style.display = 'none';
         this.loadingSection.style.display = 'flex';
+        
+        // 디버그 패널은 그대로 유지
     }
 
     // 로딩 화면 숨기기
     hideLoading() {
         this.loadingSection.style.display = 'none';
+        
+        // 디버그 패널은 그대로 유지
     }
 
     // 에러 메시지 표시
@@ -42,6 +91,8 @@ export default class AppUI {
         setTimeout(() => {
             this.errorMessage.style.display = 'none';
         }, 5000);
+        
+        // 디버그 패널은 그대로 유지
     }
 
     // 로그인 후 화면 표시
@@ -52,6 +103,8 @@ export default class AppUI {
         
         // 사용자 프로필 정보 표시
         this.renderUserProfile(profile);
+        
+        // 디버그 패널은 그대로 유지
     }
 
     // 사용자 프로필 정보 렌더링

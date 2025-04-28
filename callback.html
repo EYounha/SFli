@@ -7,69 +7,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/callback.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/authentication.css">
 </head>
 <body>
-    <div class="container">
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>스포티파이 인증 처리 중...</p>
-            <p>잠시만 기다려 주세요.</p>
-            <div id="error-message" class="error-message" style="display: none;"></div>
+    <div class="background-animation">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- 로고 코드 제거됨 -->
+            <div class="auth-spinner"></div>
+            <p class="auth-message">스포티파이 인증 처리 중...</p>
+            <div class="auth-status">
+                <p class="auth-message">잠시만 기다려 주세요.</p>
+                <div class="auth-progress-bar">
+                    <div class="auth-progress-fill"></div>
+                </div>
+            </div>
+            <div id="error-message" class="auth-error" style="display: none;"></div>
         </div>
     </div>
     
-    <script>
-        // 메인 페이지로 리디렉션
-        window.onload = function() {
-            console.log('콜백 페이지 로드됨');
-            
-            // URL 파라미터 확인
-            const urlParams = new URLSearchParams(window.location.search);
-            const isDebug = urlParams.get('debug') === 'true';
-            const error = urlParams.get('error');
-            
-            if (error) {
-                // 오류 표시
-                const errorMsg = document.getElementById('error-message');
-                errorMsg.textContent = `인증 오류: ${error}`;
-                errorMsg.style.display = 'block';
-                
-                // 3초 후 리디렉션
-                setTimeout(() => {
-                    window.location.href = '/' + (isDebug ? '?debug=true' : '');
-                }, 3000);
-                return;
-            }
-            
-            // 원래 페이지로 리디렉션 (코드 및 상태 파라미터 유지)
-            const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            
-            if (code && state) {
-                const redirectUrl = new URL('/', window.location.origin);
-                
-                // 인증 코드와 상태 전달
-                redirectUrl.searchParams.append('code', code);
-                redirectUrl.searchParams.append('state', state);
-                
-                // 디버그 모드 파라미터 추가
-                if (isDebug) {
-                    redirectUrl.searchParams.append('debug', 'true');
-                }
-                
-                // 리디렉션
-                setTimeout(() => {
-                    window.location.href = redirectUrl.toString();
-                }, 500);
-            } else {
-                // 코드나 상태가 없으면 홈으로
-                setTimeout(() => {
-                    window.location.href = '/' + (isDebug ? '?debug=true' : '');
-                }, 500);
-            }
-        };
-    </script>
+    <!-- 외부 스크립트 파일 참조 (HTML에서 스크립트 분리) -->
+    <script type="module" src="js/utils/callback-handler.js"></script>
 </body>
 </html>

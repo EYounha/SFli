@@ -3,26 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFli - 스포티파이 리스너</title>
+    <title>SFli</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/png" href="data:image/png;base64,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">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/debug.css">
+    <link rel="icon" type="image/png" href="data:image/png;base64,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">
     <script type="module" src="js/app.js"></script>
 </head>
 <body>
+    <div class="background-animation">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+    </div>
+
     <div class="container">
         <div id="login-section" class="login-container">
             <h1 class="title">SFli</h1>
-            <p class="subtitle">스포티파이 계정에 연결하여 음악 취향과 통계를 확인하세요.</p>
-            <button id="login-button" class="btn">스포티파이로 로그인</button>
+            <p class="subtitle">스포티파이 계정에 연결하여 플레이리스트를 관리하세요.</p>
+            <div class="features-preview">
+            </div>
+            <button id="login-button" class="btn login-btn">
+                <span class="spotify-icon"></span>
+                스포티파이로 로그인
+            </button>
             <div id="error-message" class="error-message"></div>
         </div>
 
         <div id="loading-section" class="loading">
             <div class="spinner"></div>
-            <p>로딩 중...</p>
+            <p>불러오는 중..</p>
         </div>
 
         <div id="logged-in-section" class="logged-in-section">

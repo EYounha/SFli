@@ -1,53 +1,101 @@
 /* 버튼 스타일 */
 .btn {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.3s, transform 0.3s;
+  display: inline-block;
+  background-color: #1db954;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
-    background-color: var(--primary-dark);
-    transform: scale(1.05);
+  background-color: #1ed760;
+  transform: translateY(-2px);
 }
 
 .btn-logout {
-    background-color: transparent;
-    border: 1px solid var(--text-secondary);
+  background-color: transparent;
+  border: 2px solid #1db954;
+  color: #1db954;
+  font-size: 1rem;
+  padding: 10px 20px;
 }
 
 .btn-logout:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(29, 185, 84, 0.1);
+  color: #1ed760;
 }
 
-/* 로딩 애니메이션 */
-.loading {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 20px;
-}
-
+/* 로딩 스피너 */
 .spinner {
-    border: 5px solid rgba(255, 255, 255, 0.1);
-    border-left-color: var(--primary-color);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: #1db954;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+  filter: drop-shadow(0 0 10px rgba(29, 185, 84, 0.3));
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #b3b3b3;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+
+/* 카드 스타일 */
+.content-section {
+  background-color: rgba(40, 40, 40, 0.6);
+  border-radius: 10px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.content-section h3 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  border-bottom: 2px solid #1db954;
+  padding-bottom: 10px;
+}
+
+/* 빈 상태 스타일 */
+.empty-state {
+  text-align: center;
+  padding: 30px;
+}
+
+.empty-state-icon {
+  font-size: 40px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* 아이콘 */
+.spotify-icon {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFFFFF'%3E%3Cpath d='M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z'/%3E%3C/svg%3E");
+  background-size: cover;
+  margin-right: 12px;
+}
+
+/* 재사용 가능한 레이아웃 */
+.content-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin: 40px 0;
+  width: 100%;
 }

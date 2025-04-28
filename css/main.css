@@ -1,0 +1,18 @@
+/* 모든 CSS 파일 임포트 */
+@import 'base.css';
+@import 'animations.css';
+@import 'components.css'; 
+@import 'sections.css';
+@import 'tracks.css';
+@import 'debug.css';
+
+/* 전역 색상 변수 */
+:root {
+  --primary-color: #1db954;
+  --primary-color-hover: #1ed760;
+  --bg-dark: #121212;
+  --bg-dark-lighter: #282828;
+  --text-light: #ffffff;
+  --text-muted: #b3b3b3;
+  --shadow-primary: 0 5px 15px rgba(29, 185, 84, 0.3);
+}

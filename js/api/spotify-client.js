@@ -97,6 +97,25 @@ async function getPlaylistTracks(playlistId, limit = 100, offset = 0) {
     return await apiRequest(`/playlists/${playlistId}/tracks?limit=${limit}&offset=${offset}`);
 }
 
+// 플레이리스트에 트랙 추가하기
+async function addTracksToPlaylist(playlistId, trackUris) {
+    return await apiRequest(`/playlists/${playlistId}/tracks`, 'POST', {
+        uris: trackUris
+    });
+}
+
+// 플레이리스트에서 트랙 제거하기
+async function removeTracksFromPlaylist(playlistId, trackUris) {
+    return await apiRequest(`/playlists/${playlistId}/tracks`, 'DELETE', {
+        tracks: trackUris.map(uri => ({ uri }))
+    });
+}
+
+// 사용자가 좋아요 한 트랙 가져오기
+async function getLikedTracks(limit = 50, offset = 0) {
+    return await apiRequest(`/me/tracks?limit=${limit}&offset=${offset}`);
+}
+
 // 모듈 내보내기
 export default {
     getCurrentUserProfile,
@@ -105,5 +124,8 @@ export default {
     getTopTracks,
     getUserPlaylists,
     getPlaylistTracks,
+    addTracksToPlaylist,
+    removeTracksFromPlaylist,
+    getLikedTracks,
     apiRequest
 };

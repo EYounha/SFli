@@ -1,0 +1,108 @@
+/* 디버그 패널 스타일 */
+#debug-panel {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-top-left-radius: 10px;
+  color: #ddd;
+  width: 350px;
+  max-height: 400px;
+  padding: 15px;
+  overflow: hidden;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  box-shadow: -3px -3px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+#debug-panel h3 {
+  font-size: 1rem;
+  margin: 0 0 10px;
+  color: #1db954;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#debug-panel h3::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #1db954;
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+#debug-log {
+  font-family: 'Consolas', monospace;
+  font-size: 12px;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 10px;
+  height: 300px;
+  overflow-y: auto;
+  color: #ddd;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.debug-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(51, 51, 51, 0.7);
+  color: #ddd;
+  border: 1px solid #555;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.debug-toggle-btn:hover {
+  background-color: rgba(68, 68, 68, 0.9);
+  transform: scale(1.05);
+}
+
+.debug-info { color: #4caf50; }
+.debug-warn { color: #ff9800; }
+.debug-error { color: #f44336; }
+
+/* 코드 스니펫 */
+.code-snippet {
+  background: rgba(20, 20, 20, 0.8);
+  border-left: 3px solid #1db954;
+  padding: 5px 10px;
+  margin: 5px 0;
+  font-family: monospace;
+  font-size: 11px;
+  overflow-x: auto;
+}
+
+/* 디버그 패널 애니메이션 */
+@keyframes slideIn {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+#debug-panel.active {
+  animation: slideIn 0.3s forwards;
+}

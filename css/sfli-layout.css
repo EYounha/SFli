@@ -1,0 +1,135 @@
+/* SFli 페이지 기본 레이아웃 스타일 */
+
+.sfli-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 헤더 영역 */
+.sfli-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 30px;
+}
+
+.sfli-header .title {
+  font-size: 2.2rem;
+  background: linear-gradient(90deg, #1db954, #4776E6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+
+.user-profile-mini {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  background-color: rgba(40, 40, 40, 0.6);
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-profile-mini:hover {
+  transform: translateY(-2px);
+  background-color: rgba(40, 40, 40, 0.8);
+}
+
+.user-profile-mini .user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1db954;
+  margin-right: 10px;
+}
+
+.user-profile-mini .user-name {
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 메인 콘텐츠 레이아웃 */
+.sfli-main {
+  display: flex;
+  flex: 1;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* 사이드바 */
+.sidebar {
+  width: 250px;
+  min-width: 250px;
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 10px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.nav-title {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 푸터 */
+.sfli-footer {
+  padding: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* 콘텐츠 영역 */
+.content-area {
+  flex: 1;
+  padding: 20px;
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+/* 범용 컴포넌트 */
+h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #fff;
+}
+
+.loading-placeholder {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}

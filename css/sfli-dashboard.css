@@ -1,0 +1,149 @@
+/* SFli 대시보드 스타일 */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.stat-card {
+  background-color: rgba(40, 40, 40, 0.6);
+  border-radius: 10px;
+  padding: 20px;
+  height: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #fff;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 트랙 및 아티스트 리스트 (대시보드용) */
+.top-tracks-list,
+.top-artists-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.track-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: rgba(30, 30, 30, 0.5);
+  transition: all 0.2s ease;
+}
+
+.track-item:hover {
+  background-color: rgba(40, 40, 40, 0.8);
+  transform: translateX(5px);
+}
+
+.track-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(29, 185, 84, 0.15);
+  color: #1db954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.track-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.track-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.track-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+
+.track-artist {
+  font-size: 0.8rem;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 최근 활동 */
+.recent-activity {
+  margin-top: 40px;
+}
+
+.activity-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-item {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background-color: rgba(40, 40, 40, 0.6);
+  display: flex;
+  align-items: center;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(29, 185, 84, 0.15);
+  color: #1db954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-right: 15px;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.activity-details {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.activity-time {
+  font-size: 0.75rem;
+  color: #777;
+  white-space: nowrap;
+  margin-left: 15px;
+}

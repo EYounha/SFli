@@ -65,18 +65,28 @@ function updateProgressBar(percent) {
     }
 }
 
-// 메인 페이지로 리다이렉트 - 기존 URL 구조 기반으로 경로 설정
+// 메인 페이지로 리다이렉트 - 현재 URL 구조를 기반으로 동적으로 계산
 function redirectToMainPage(delay = 1000) {
     setTimeout(() => {
         debugLog('메인 페이지로 리다이렉트 중...');
         
         // 현재 URL을 기반으로 상대 경로 계산
-        const currentUrl = new URL(window.location.href);
-        const baseUrl = currentUrl.origin;
-        const debugParam = isDebugMode() ? '?debug=true' : '';
+        const location = window.location;
+        const pathname = location.pathname; // '/repository-name/callback.html'
         
-        // 최상위 경로로 이동 (경로 문제 해결)
-        const targetUrl = `${baseUrl}/SFli.html${debugParam}`;
+        // 현재 경로에서 callback.html을 SFli.html로 변경
+        let targetPath;
+        if (pathname.includes('/')) {
+            // 마지막 '/' 이후의 파일명을 찾아 SFli.html로 변경
+            const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+            targetPath = basePath + 'SFli.html';
+        } else {
+            // 경로가 없는 경우 (루트에 있는 경우)
+            targetPath = '/SFli.html';
+        }
+        
+        const debugParam = isDebugMode() ? '?debug=true' : '';
+        const targetUrl = `${location.origin}${targetPath}${debugParam}`;
         
         debugLog('리다이렉트 URL:', targetUrl);
         window.location.href = targetUrl;
@@ -91,10 +101,19 @@ function handleAuthError(error) {
     // 오류 발생 시 3초 후 메인 페이지로 이동
     setTimeout(() => {
         // 현재 URL을 기반으로 상대 경로 계산
-        const currentUrl = new URL(window.location.href);
-        const baseUrl = currentUrl.origin;
+        const location = window.location;
+        const pathname = location.pathname;
         
-        window.location.href = `${baseUrl}/index.html`;
+        // 현재 경로에서 callback.html을 index.html로 변경
+        let targetPath;
+        if (pathname.includes('/')) {
+            const basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+            targetPath = basePath + 'index.html';
+        } else {
+            targetPath = '/index.html';
+        }
+        
+        window.location.href = `${location.origin}${targetPath}`;
     }, 3000);
 }
 

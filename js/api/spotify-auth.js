@@ -4,7 +4,7 @@
 let SPOTIFY_CONFIG = {
     CLIENT_ID: '%SPOTIFY_CLIENT_ID%',
     CLIENT_SECRET: '%SPOTIFY_CLIENT_SECRET%',
-    REDIRECT_URI: window.location.origin + '/callback.html', // 동적 URL 생성
+    REDIRECT_URI: '', // 동적으로 설정될 예정
     AUTH_ENDPOINT: 'https://accounts.spotify.com/authorize',
     TOKEN_ENDPOINT: 'https://accounts.spotify.com/api/token',
     SCOPES: [
@@ -73,13 +73,30 @@ function getCookie(name) {
     return null;
 }
 
+// GitHub Pages와 같은 서브디렉토리 환경에서도 올바른 리디렉션 URI 생성
+function getRedirectUri() {
+    // 기본 URL 구조 분석
+    const location = window.location;
+    const origin = location.origin; // 'https://username.github.io'
+    const pathname = location.pathname; // '/repository-name/SFli.html'
+    
+    // 현재 경로에서 파일 이름 제외하고 경로 추출
+    let basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1); // '/repository-name/'
+    
+    // 리디렉션 URI 구성
+    let redirectUri = origin + basePath + 'callback.html';
+    logger.debug('생성된 리디렉션 URI:', redirectUri);
+    
+    return redirectUri;
+}
+
 // 디버그 키 로드 (로컬 개발 환경인 경우)
 async function loadCredentials() {
     try {
         logger.debug('자격 증명 로드 시작');
         
         // 동적 리디렉션 URI 설정
-        SPOTIFY_CONFIG.REDIRECT_URI = window.location.origin + '/callback.html';
+        SPOTIFY_CONFIG.REDIRECT_URI = getRedirectUri();
         logger.debug('리디렉션 URI 설정:', SPOTIFY_CONFIG.REDIRECT_URI);
         
         // 현재 호스트 확인

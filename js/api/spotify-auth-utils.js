@@ -29,9 +29,9 @@ export function getCookie(name) {
 export function getRedirectUri() {
     // 기본 URL 구조 분석
     const location = window.location;
-    const origin = location.origin; // 'https://username.github.io'
-    const pathname = location.pathname; // '/repository-name/SFli.html' 또는 '/SFli.html'
-    const hostname = location.hostname; // 'username.github.io' 또는 'localhost'
+    const origin = location.origin; // 'https://eyounha.github.io'
+    const pathname = location.pathname; // '/SFli/index.html' 또는 '/SFli/'
+    const hostname = location.hostname; // 'eyounha.github.io' 또는 'localhost'
     
     logger.debug('현재 URL 정보:', {
         origin,
@@ -40,29 +40,41 @@ export function getRedirectUri() {
         href: location.href
     });
     
-    // GitHub Pages 환경인지 확인 (username.github.io 형식)
+    // GitHub Pages 환경인지 확인
     const isGitHubPages = hostname.includes('github.io');
     
-    // 현재 경로에서 파일 이름 제외하고 경로 추출
-    let basePath;
+    // EYounha의 GitHub Pages에 맞는 리디렉션 URI 생성
+    if (isGitHubPages && hostname === 'eyounha.github.io') {
+        // 이미 개발자 대시보드에 등록된 URI 사용
+        if (pathname.startsWith('/SFli/')) {
+            // https://eyounha.github.io/SFli/ 형식
+            return 'https://eyounha.github.io/SFli/';
+        } else {
+            // https://eyounha.github.io/ 형식
+            return 'https://eyounha.github.io/';
+        }
+    }
     
+    // 로컬 개발 환경인 경우
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // index.html 또는 callback.html 확인
+        if (pathname.includes('callback.html')) {
+            return 'http://localhost:5500/callback.html';
+        } else {
+            return 'http://127.0.0.1:5500/index.html';
+        }
+    }
+    
+    // 기존 로직 (다른 환경을 위한 폴백)
+    let basePath;
     if (pathname.includes('/')) {
-        // 마지막 '/'까지의 경로 추출 (파일명 제외)
         basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
     } else {
-        // '/'가 없는 경우 (루트 경로)
         basePath = '/';
     }
     
     // 리디렉션 URI 구성
     let redirectUri = origin + basePath + 'callback.html';
-    
-    // 만약 GitHub Pages이고 리포지토리 이름이 있는 경우 (username.github.io/repo-name)
-    // 또는 개인 GitHub Pages (username.github.io)인 경우 처리
-    if (isGitHubPages) {
-        logger.debug('GitHub Pages 환경 감지됨', { basePath });
-    }
-    
     logger.debug('생성된 리디렉션 URI:', redirectUri);
     
     return redirectUri;

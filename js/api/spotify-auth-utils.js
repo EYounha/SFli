@@ -30,14 +30,53 @@ export function getRedirectUri() {
     // 기본 URL 구조 분석
     const location = window.location;
     const origin = location.origin; // 'https://username.github.io'
-    const pathname = location.pathname; // '/repository-name/SFli.html'
+    const pathname = location.pathname; // '/repository-name/SFli.html' 또는 '/SFli.html'
+    const hostname = location.hostname; // 'username.github.io' 또는 'localhost'
+    
+    logger.debug('현재 URL 정보:', {
+        origin,
+        pathname,
+        hostname,
+        href: location.href
+    });
+    
+    // GitHub Pages 환경인지 확인 (username.github.io 형식)
+    const isGitHubPages = hostname.includes('github.io');
     
     // 현재 경로에서 파일 이름 제외하고 경로 추출
-    let basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1); // '/repository-name/'
+    let basePath;
+    
+    if (pathname.includes('/')) {
+        // 마지막 '/'까지의 경로 추출 (파일명 제외)
+        basePath = pathname.substring(0, pathname.lastIndexOf('/') + 1);
+    } else {
+        // '/'가 없는 경우 (루트 경로)
+        basePath = '/';
+    }
     
     // 리디렉션 URI 구성
     let redirectUri = origin + basePath + 'callback.html';
+    
+    // 만약 GitHub Pages이고 리포지토리 이름이 있는 경우 (username.github.io/repo-name)
+    // 또는 개인 GitHub Pages (username.github.io)인 경우 처리
+    if (isGitHubPages) {
+        logger.debug('GitHub Pages 환경 감지됨', { basePath });
+    }
+    
     logger.debug('생성된 리디렉션 URI:', redirectUri);
+    
+    return redirectUri;
+}
+
+// 스포티파이 개발자 대시보드에 설정해야 할 정확한 리디렉션 URI 반환
+export function getSpotifyDashboardRedirectUri() {
+    const redirectUri = getRedirectUri();
+    
+    // 개발자에게 보여줄 메시지 로깅
+    logger.info('===== 스포티파이 개발자 대시보드에 등록할 리디렉션 URI =====');
+    logger.info(redirectUri);
+    logger.info('위 URI를 스포티파이 개발자 대시보드에서 반드시 등록해야 합니다.');
+    logger.info('===============================================');
     
     return redirectUri;
 }

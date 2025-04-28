@@ -11,10 +11,16 @@ export async function getAccessToken(code) {
     // 이전의 Authentication 관련 오류 초기화
     localStorage.removeItem('auth_error');
     
+    const redirectUri = SPOTIFY_CONFIG.REDIRECT_URI;
+    
+    // 리디렉션 URI 로깅 - 문제 파악을 위해 더 자세한 정보 출력
+    logger.info('▶️ 토큰 요청에 사용되는 리디렉션 URI:', redirectUri);
+    logger.info('✅ 이 URI가 스포티파이 개발자 대시보드에 정확히 등록되어 있어야 합니다.');
+    
     const params = new URLSearchParams({
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: SPOTIFY_CONFIG.REDIRECT_URI,
+        redirect_uri: redirectUri,
         client_id: SPOTIFY_CONFIG.CLIENT_ID,
         client_secret: SPOTIFY_CONFIG.CLIENT_SECRET
     });
@@ -32,10 +38,24 @@ export async function getAccessToken(code) {
             const errorData = await response.text();
             logger.error('토큰 요청 실패:', response.status, errorData);
             
+            // 오류가 'Invalid redirect URI'인지 확인
+            if (errorData.includes('redirect_uri') || errorData.includes('invalid_redirect')) {
+                logger.error('❌ Invalid redirect URI 오류 감지됨!');
+                logger.error('▶️ 스포티파이 개발자 대시보드에 다음 URI가 등록되어 있는지 확인하세요:');
+                logger.error(redirectUri);
+                
+                // GitHub Pages 환경인지 확인하여 추가 정보 제공
+                if (window.location.hostname.includes('github.io')) {
+                    logger.error('💡 GitHub Pages를 사용 중인 경우, 저장소 이름을 포함한 전체 경로가 등록되어 있어야 합니다.');
+                    logger.error('예: https://username.github.io/repository-name/callback.html');
+                }
+            }
+            
             // 오류 정보 저장 (디버깅용)
             localStorage.setItem('auth_error', JSON.stringify({
                 status: response.status,
                 error: errorData,
+                redirectUri: redirectUri,
                 timestamp: Date.now()
             }));
             

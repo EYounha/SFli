@@ -12,6 +12,7 @@ import {
 
 import {
     getRedirectUri,
+    getSpotifyDashboardRedirectUri,
     generateRandomString,
     getStoredAuthState,
     setCookie,
@@ -37,9 +38,8 @@ async function loadCredentials() {
     try {
         logger.debug('자격 증명 로드 시작');
         
-        // 동적 리디렉션 URI 설정
-        SPOTIFY_CONFIG.REDIRECT_URI = getRedirectUri();
-        logger.debug('리디렉션 URI 설정:', SPOTIFY_CONFIG.REDIRECT_URI);
+        // 동적 리디렉션 URI 설정 - 리디렉션 URI를 사전에 출력하여 확인할 수 있도록 함
+        SPOTIFY_CONFIG.REDIRECT_URI = getSpotifyDashboardRedirectUri();
         
         // 현재 호스트 확인
         const currentHost = window.location.hostname;
@@ -71,8 +71,13 @@ async function loadCredentials() {
                 // 오류가 발생해도 계속 진행 (프로덕션 값 사용)
             }
         } else {
-            // GitHub Pages 등에서는 환경 변수 사용
-            logger.debug('프로덕션 환경 감지됨');
+            // GitHub Pages 환경인 경우 추가 정보 표시
+            const isGitHubPages = currentHost.includes('github.io');
+            if (isGitHubPages) {
+                logger.info('GitHub Pages 환경이 감지되었습니다.');
+                logger.info('스포티파이 개발자 대시보드에 다음 리디렉션 URI가 정확히 등록되어 있는지 확인하세요:');
+                logger.info(SPOTIFY_CONFIG.REDIRECT_URI);
+            }
         }
         
         // 설정 검증
